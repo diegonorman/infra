@@ -70,4 +70,4 @@ jobs:
       - name: Terraform Destroy
         id: terraform-destroy
         run: |
-        terraform destroy "${{ inputs.environment }}.plan"
+        terraform destroy "${{ inputs.environment }}"
