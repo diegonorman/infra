@@ -33,37 +33,39 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform-version: 1.8.3
+          terraform_version: 1.9.3
 
-      - name: COnfigure AWS credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.aws-assume-role-arn }}
-          role-session-name:  GitHub_to_AWS_viaFederatedOIDC
+          role-session-name: GitHub_to_AWS_viaFederatedOIDC
           aws-region: ${{ inputs.aws-region }}
 
       - name: Terraform Init
-        run:
-          cd infra && terraform init \
+        run: |
+          cd infra
+          terraform init \
             -backend-config="bucket=${{ inputs.aws-statefile-s3-bucket }}" \
             -backend-config="key=${{ github.event.repository.name }}" \
             -backend-config="region=${{ inputs.aws-region }}" \
             -backend-config="dynamodb=${{ inputs.aws-lock-dynamodb-table }}"
-        
+
       - name: Terraform Validate
-        run: terraform validate
+        run: |
+          cd infra
+          terraform validate
 
       - name: Terraform Plan
         id: terraform-plan
-        run: cd infra &&
-          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
-          terraform plan -var-file="./envs/${{ inputs.environment }}"/terraform.tfvars" -out="${{ inputs.environment }}.plan"
+        run: |
+          cd infra
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+          terraform plan -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -out="${{ inputs.environment }}.plan"
 
       - name: Terraform Apply
         id: terraform-apply
-        run: cd infra &&
-          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
-          terraform apply -var-file="./envs/${{ inputs.environment }}"/terraform.tfvars" -out="${{ inputs.environment }}.plan"
-
-      
-
+        run: |
+          cd infra
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+          terraform apply -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -out="${{ inputs.environment }}.plan"
