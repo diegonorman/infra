@@ -62,7 +62,7 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Destroy
+      - name: Terraform Destroy 
         if: steps.read-destroy-config.outputs.destroy == 'true'
         id: terraform-destroy
         run:
