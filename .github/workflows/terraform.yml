@@ -68,7 +68,7 @@ jobs:
       #     terraform apply -auto-approve "${{ inputs.environment }}.plan"
 
       - name: Terraform Destroy
-        if: github.event.action == 'destroy'  # Condição para execução
+        if: github.event.action == 'destroy'
         run: |
           terraform workspace select ${{ inputs.environment }}
           terraform destroy -auto-approve -var-file="./envs/${{ inputs.environment }}/terraform.tfvars"
