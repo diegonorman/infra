@@ -71,7 +71,7 @@ jobs:
         id: terraform-destroy
         run: |
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
-          terraform destroy -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -out="${{ inputs.environment }}.plan"
+          terraform destroy -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -auto-approve
 
       - name: Terraform Plan
         if: steps.read-destroy-config.outputs.destroy != 'true'
@@ -84,4 +84,4 @@ jobs:
         if: steps.read-destroy-config.outputs.destroy != 'true'
         id: terraform-apply
         run: |
-          terraform apply -auto-approve "${{ inputs.environment }}.plan"
+          terraform apply -auto-approve
