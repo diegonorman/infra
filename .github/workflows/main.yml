@@ -3,7 +3,7 @@ name: "DEV PROD"
 on:
     push:
         branches:
-          - developer
+          - main
 
 permissions:
     id-token: write
