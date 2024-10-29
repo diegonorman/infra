@@ -1,1 +1,1 @@
-bucket_name="dev-us-east-1-build-norman"
+bucket_name="dev-us-east-1-build-norman2024"
